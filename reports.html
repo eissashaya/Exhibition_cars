@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التقارير - نظام إدارة معرض السيارات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <!-- رأس الصفحة -->
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-car"></i>
+                <div class="logo-text">
+                    <h1>التقارير والإحصائيات</h1>
+                    <p>تحليل أداء المعرض والمبيعات والمخزون</p>
+                </div>
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-tachometer-alt"></i> الرئيسية</a></li>
+                    <li><a href="cars.html"><i class="fas fa-car"></i> السيارات</a></li>
+                    <li><a href="sales.html"><i class="fas fa-chart-line"></i> المبيعات</a></li>
+                    <li><a href="reports.html" class="active"><i class="fas fa-file-alt"></i> التقارير</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <div class="container">
+        <!-- إحصائيات شاملة -->
+        <div class="stats-grid" style="margin-top: 1rem;">
+            <div class="stat-card">
+                <i class="fas fa-chart-line"></i>
+                <h3>معدل البيع اليومي</h3>
+                <div class="stat-value" id="dailySalesRate">0</div>
+                <p class="stat-desc">عملية بيع/يوم</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-percentage"></i>
+                <h3>نسبة البيع</h3>
+                <div class="stat-value" id="salePercentage">0%</div>
+                <p class="stat-desc">من إجمالي المخزون</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-trophy"></i>
+                <h3>أعلى مبيعات</h3>
+                <div class="stat-value" id="topSalesModel">-</div>
+                <p class="stat-desc">أكثر موديل مبيعاً</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-user-tie"></i>
+                <h3>أفضل عميل</h3>
+                <div class="stat-value" id="topCustomer">-</div>
+                <p class="stat-desc">أكثر عميل شراءً</p>
+            </div>
+        </div>
+
+        <!-- توليد التقارير -->
+        <section class="section">
+            <h2><i class="fas fa-file-export"></i> إنشاء التقارير</h2>
+            
+            <div class="tabs" id="reportTabs">
+                <div class="tab active" onclick="switchReportTab('salesReport')">تقرير المبيعات</div>
+                <div class="tab" onclick="switchReportTab('inventoryReport')">تقرير المخزون</div>
+                <div class="tab" onclick="switchReportTab('financeReport')">تقرير مالي</div>
+                <div class="tab" onclick="switchReportTab('customersReport')">تقرير العملاء</div>
+            </div>
+            
+            <!-- تقرير المبيعات -->
+            <div id="salesReport" class="tab-content active">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-week"></i> الفترة الزمنية</label>
+                        <select id="salesPeriod" onchange="handleSalesPeriodChange()">
+                            <option value="today">اليوم</option>
+                            <option value="week">هذا الأسبوع</option>
+                            <option value="month">هذا الشهر</option>
+                            <option value="quarter">هذا الربع</option>
+                            <option value="year">هذا العام</option>
+                            <option value="custom">مخصص</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="salesCustomDateGroup" style="display: none;">
+                        <label><i class="fas fa-calendar-alt"></i> من تاريخ</label>
+                        <input type="date" id="salesStartDate">
+                    </div>
+
+                    <div class="form-group" id="salesCustomDateGroup2" style="display: none;">
+                        <label><i class="fas fa-calendar-alt"></i> إلى تاريخ</label>
+                        <input type="date" id="salesEndDate">
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-filter"></i> التصنيف حسب</label>
+                        <select id="salesGroupBy">
+                            <option value="day">اليوم</option>
+                            <option value="week">الأسبوع</option>
+                            <option value="month">الشهر</option>
+                            <option value="model">الموديل</option>
+                            <option value="payment">طريقة الدفع</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <button class="btn" onclick="generateSalesReport()">
+                            <i class="fas fa-chart-bar"></i> إنشاء التقرير
+                        </button>
+                        <button class="btn btn-secondary" onclick="exportSalesReport()">
+                            <i class="fas fa-download"></i> تصدير التقرير
+                        </button>
+                        <button class="btn btn-warning" onclick="printSalesReport()">
+                            <i class="fas fa-print"></i> طباعة التقرير
+                        </button>
+                    </div>
+                </div>
+
+                <div id="salesReportOutput"></div>
+                <div id="salesCharts" style="margin-top: 2rem;"></div>
+            </div>
+            
+            <!-- تقرير المخزون -->
+            <div id="inventoryReport" class="tab-content">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label><i class="fas fa-filter"></i> التصنيف حسب</label>
+                        <select id="inventoryGroupBy">
+                            <option value="type">النوع</option>
+                            <option value="status">الحالة</option>
+                            <option value="year">سنة الصنع</option>
+                            <option value="model">الموديل</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-sort"></i> الترتيب حسب</label>
+                        <select id="inventorySortBy">
+                            <option value="price">السعر</option>
+                            <option value="year">سنة الصنع</option>
+                            <option value="mileage">المسافة المقطوعة</option>
+                            <option value="date">تاريخ الإضافة</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <button class="btn" onclick="generateInventoryReport()">
+                            <i class="fas fa-boxes"></i> إنشاء التقرير
+                        </button>
+                        <button class="btn btn-secondary" onclick="exportInventoryReport()">
+                            <i class="fas fa-download"></i> تصدير التقرير
+                        </button>
+                    </div>
+                </div>
+
+                <div id="inventoryReportOutput"></div>
+                <div id="inventoryCharts" style="margin-top: 2rem;"></div>
+            </div>
+            
+            <!-- تقرير مالي -->
+            <div id="financeReport" class="tab-content">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-week"></i> الفترة الزمنية</label>
+                        <select id="financePeriod" onchange="handleFinancePeriodChange()">
+                            <option value="month">هذا الشهر</option>
+                            <option value="quarter">هذا الربع</option>
+                            <option value="year">هذا العام</option>
+                            <option value="custom">مخصص</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="financeCustomDateGroup" style="display: none;">
+                        <label><i class="fas fa-calendar-alt"></i> من تاريخ</label>
+                        <input type="date" id="financeStartDate">
+                    </div>
+
+                    <div class="form-group" id="financeCustomDateGroup2" style="display: none;">
+                        <label><i class="fas fa-calendar-alt"></i> إلى تاريخ</label>
+                        <input type="date" id="financeEndDate">
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-chart-pie"></i> نوع التقرير</label>
+                        <select id="financeReportType">
+                            <option value="summary">ملخص مالي</option>
+                            <option value="revenue">الإيرادات</option>
+                            <option value="payment">طرق الدفع</option>
+                            <option value="trend">الاتجاهات</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <button class="btn" onclick="generateFinanceReport()">
+                            <i class="fas fa-money-bill-wave"></i> إنشاء التقرير
+                        </button>
+                        <button class="btn btn-secondary" onclick="exportFinanceReport()">
+                            <i class="fas fa-download"></i> تصدير التقرير
+                        </button>
+                    </div>
+                </div>
+
+                <div id="financeReportOutput"></div>
+                <div id="financeCharts" style="margin-top: 2rem;"></div>
+            </div>
+            
+            <!-- تقرير العملاء -->
+            <div id="customersReport" class="tab-content">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-week"></i> الفترة الزمنية</label>
+                        <select id="customersPeriod" onchange="handleCustomersPeriodChange()">
+                            <option value="all">كل الفترات</option>
+                            <option value="year">هذا العام</option>
+                            <option value="month">هذا الشهر</option>
+                            <option value="custom">مخصص</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="customersCustomDateGroup" style="display: none;">
+                        <label><i class="fas fa-calendar-alt"></i> من تاريخ</label>
+                        <input type="date" id="customersStartDate">
+                    </div>
+
+                    <div class="form-group" id="customersCustomDateGroup2" style="display: none;">
+                        <label><i class="fas fa-calendar-alt"></i> إلى تاريخ</label>
+                        <input type="date" id="customersEndDate">
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-sort"></i> الترتيب حسب</label>
+                        <select id="customersSortBy">
+                            <option value="purchases">عدد المشتريات</option>
+                            <option value="amount">مجموع المشتريات</option>
+                            <option value="recency">آخر عملية شراء</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <button class="btn" onclick="generateCustomersReport()">
+                            <i class="fas fa-users"></i> إنشاء التقرير
+                        </button>
+                        <button class="btn btn-secondary" onclick="exportCustomersReport()">
+                            <i class="fas fa-download"></i> تصدير التقرير
+                        </button>
+                    </div>
+                </div>
+
+                <div id="customersReportOutput"></div>
+                <div id="customersCharts" style="margin-top: 2rem;"></div>
+            </div>
+        </section>
+
+        <!-- تقارير سريعة -->
+        <section class="section">
+            <h2><i class="fas fa-bolt"></i> تقارير سريعة</h2>
+            <div class="quick-actions">
+                <a href="javascript:void(0)" class="quick-action-card" onclick="generateDailyReport()">
+                    <i class="fas fa-sun"></i>
+                    <h3>تقرير اليوم</h3>
+                    <p>عرض مبيعات اليوم</p>
+                </a>
+                <a href="javascript:void(0)" class="quick-action-card" onclick="generateWeeklyReport()">
+                    <i class="fas fa-calendar-week"></i>
+                    <h3>تقرير الأسبوع</h3>
+                    <p>عرض مبيعات الأسبوع</p>
+                </a>
+                <a href="javascript:void(0)" class="quick-action-card" onclick="generateTopModelsReport()">
+                    <i class="fas fa-trophy"></i>
+                    <h3>أفضل الموديلات</h3>
+                    <p>عرض أكثر الموديلات مبيعاً</p>
+                </a>
+                <a href="javascript:void(0)" class="quick-action-card" onclick="generateInventoryStatus()">
+                    <i class="fas fa-box-open"></i>
+                    <h3>حالة المخزون</h3>
+                    <p>عرض تقرير المخزون الحالي</p>
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- تذييل الصفحة -->
+    <footer>
+        <p>© 2025 نظام إدارة معرض السيارات | تم التطوير بواسطة المبرمج م/عيسى شايع </p>
+        <p>جميع الحقوق محفوظة | نسخة 2.0</p>
+    </footer>
+
+    <script src="main.js"></script>
+    <script src="reports.js"></script>
+</body>
+</html>

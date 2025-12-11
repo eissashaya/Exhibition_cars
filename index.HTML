@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - نظام إدارة معرض السيارات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <!-- رأس الصفحة -->
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-car"></i>
+                <div class="logo-text">
+                    <h1>نظام إدارة معرض السيارات</h1>
+                    <p>إدارة متكاملة لمخزون السيارات والمبيعات والتقارير</p>
+                </div>
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="index.html" class="active"><i class="fas fa-tachometer-alt"></i> الرئيسية</a></li>
+                    <li><a href="cars.html"><i class="fas fa-car"></i> السيارات</a></li>
+                    <li><a href="sales.html"><i class="fas fa-chart-line"></i> المبيعات</a></li>
+                    <li><a href="reports.html"><i class="fas fa-file-alt"></i> التقارير</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <div class="container">
+        <!-- قسم الترحيب -->
+        <section class="welcome-section">
+            <h2><i class="fas fa-hand-wave"></i> مرحباً بك في نظام إدارة المعرض</h2>
+            <p>إدارة فعالة لمخزون السيارات وتتبع المبيعات وتحليل الأداء</p>
+            <div class="stat-value" id="welcomeStats">0 سيارة | 0 عملية بيع</div>
+        </section>
+
+        <!-- الإجراءات السريعة -->
+        <div class="quick-actions">
+            <a href="cars.html" class="quick-action-card">
+                <i class="fas fa-car-side"></i>
+                <h3>إضافة سيارة جديدة</h3>
+                <p>إضافة سيارة جديدة إلى المخزون</p>
+            </a>
+            <a href="sales.html" class="quick-action-card">
+                <i class="fas fa-cash-register"></i>
+                <h3>تسجيل عملية بيع</h3>
+                <p>تسجيل بيع سيارة لعميل</p>
+            </a>
+            <a href="reports.html" class="quick-action-card">
+                <i class="fas fa-chart-bar"></i>
+                <h3>عرض التقارير</h3>
+                <p>تحليل المبيعات والأداء</p>
+            </a>
+            <a href="cars.html" class="quick-action-card">
+                <i class="fas fa-search"></i>
+                <h3>استعراض السيارات</h3>
+                <p>عرض وتعديل السيارات المتاحة</p>
+            </a>
+        </div>
+
+        <!-- الإحصائيات -->
+        <section class="section">
+            <h2><i class="fas fa-chart-pie"></i> نظرة سريعة على المعرض</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <i class="fas fa-car"></i>
+                    <h3>إجمالي السيارات</h3>
+                    <div class="stat-value" id="totalCars">0</div>
+                    <p class="stat-desc">جميع السيارات في المعرض</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>السيارات المباعة</h3>
+                    <div class="stat-value" id="soldCars">0</div>
+                    <p class="stat-desc">تم بيعها خلال الفترة الحالية</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <h3>إجمالي المبيعات</h3>
+                    <div class="stat-value" id="totalSales">0 ر.س</div>
+                    <p class="stat-desc">قيمة المبيعات الإجمالية</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>متوسط السعر</h3>
+                    <div class="stat-value" id="avgPrice">0 ر.س</div>
+                    <p class="stat-desc">متوسط سعر السيارات</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- السيارات الأخيرة -->
+        <section class="section">
+            <h2><i class="fas fa-history"></i> آخر السيارات المضافة</h2>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>الموديل</th>
+                            <th>النوع</th>
+                            <th>السنة</th>
+                            <th>السعر</th>
+                            <th>الحالة</th>
+                            <th>تاريخ الإضافة</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentCarsTable">
+                        <!-- البيانات تظهر هنا -->
+                    </tbody>
+                </table>
+            </div>
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <a href="cars.html" class="btn">عرض جميع السيارات <i class="fas fa-arrow-left"></i></a>
+            </div>
+        </section>
+
+        <!-- المبيعات الأخيرة -->
+        <section class="section">
+            <h2><i class="fas fa-shopping-cart"></i> آخر عمليات البيع</h2>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>التاريخ</th>
+                            <th>الموديل</th>
+                            <th>العميل</th>
+                            <th>المبلغ</th>
+                            <th>طريقة الدفع</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentSalesTable">
+                        <!-- البيانات تظهر هنا -->
+                    </tbody>
+                </table>
+            </div>
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <a href="sales.html" class="btn">عرض جميع المبيعات <i class="fas fa-arrow-left"></i></a>
+            </div>
+        </section>
+    </div>
+
+    <!-- تذييل الصفحة -->
+    <footer>
+        <p>© 2025 نظام إدارة معرض السيارات | تم التطوير بواسطة  المبرمج م/عيسى شايع</p>
+        <p>جميع الحقوق محفوظة | نسخة 2.0</p>
+    </footer>
+
+    <script src="main.js"></script>
+     <script src="dashboard.js"></script>
+</body>
+</html>

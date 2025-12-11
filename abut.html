@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بطاقة عرض - نظام إدارة معرض السيارات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2A5CAA;
+            --primary-dark: #1E4480;
+            --secondary: #FF6B35;
+            --dark: #2C3E50;
+            --light: #F8F9FA;
+            --gray: #6C757D;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --radius: 15px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: linear-gradient(135deg, #f5f7fb 0%, #e4edf5 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* البطاقة الأساسية */
+        .simple-card {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            max-width: 500px;
+            width: 100%;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        .simple-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-image {
+            height: 250px;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .simple-card:hover .card-image img {
+            transform: scale(1.05);
+        }
+
+        .card-overlay {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0.1));
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 1.5rem;
+            color: white;
+        }
+
+        .card-overlay h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+
+        .card-overlay p {
+            opacity: 0.9;
+            font-size: 1rem;
+            max-width: 90%;
+        }
+
+        .card-content {
+            padding: 1.8rem;
+        }
+
+        .card-icon {
+            font-size: 2.2rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .card-content h3 {
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+            text-align: center;
+            font-size: 1.5rem;
+        }
+
+        .card-content p {
+            color: var(--gray);
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .show-details-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .show-details-btn:hover {
+            background: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+        }
+
+        /* النافذة المنبثقة */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            max-width: 1200px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: var(--secondary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            background: #E55A2B;
+            transform: rotate(90deg);
+        }
+
+        /* تصميم النافذة الداخلية - نفس تصميم البطاقة الكاملة */
+        .business-card {
+            background: white;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            padding: 2.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.05)"/></svg>');
+            background-size: cover;
+        }
+
+        .card-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .card-icon-large {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .features-section {
+            padding: 2.5rem;
+            background-color: #f9fafc;
+        }
+
+        .features-section h2 {
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .features-section h2 i {
+            color: var(--secondary);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .feature-content h3 {
+            color: var(--primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .feature-content p {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        .screenshots-section {
+            padding: 2.5rem;
+            background: white;
+        }
+
+        .screenshots-section h2 {
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .screenshots-section h2 i {
+            color: var(--secondary);
+        }
+
+        .screenshots-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .screenshot-item {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            position: relative;
+            height: 200px;
+        }
+
+        .screenshot-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .screenshot-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .screenshot-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .screenshot-label {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            background: rgba(42, 92, 170, 0.9);
+            color: white;
+            padding: 0.7rem;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .card-footer {
+            background: var(--dark);
+            color: white;
+            padding: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .cta-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .cta-section p {
+            opacity: 0.8;
+            font-size: 0.95rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.9rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .btn-primary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #E55A2B;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: white;
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 992px) {
+            .card-body {
+                grid-template-columns: 1fr;
+            }
+            
+            .card-header h1 {
+                font-size: 2rem;
+            }
+            
+            .card-header p {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .screenshots-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .card-footer {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .feature-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .modal-content {
+                max-height: 95vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- البطاقة الأساسية البسيطة -->
+    <div class="simple-card" id="mainCard">
+        <div class="card-image">
+            <img src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80" alt="نظام إدارة معرض السيارات">
+            <div class="card-overlay">
+                <h2>نظام إدارة معرض السيارات</h2>
+                <p>حل متكامل لإدارة معارض السيارات باحترافية وسهولة</p>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="card-icon">
+                <i class="fas fa-car"></i>
+            </div>
+            <h3>نظام إدارة معرض السيارات</h3>
+            <p>حل متكامل لإدارة معارض السيارات باحترافية وسهولة - نظام ويب متطور يعمل على جميع الأجهزة</p>
+            <button class="show-details-btn" id="showDetailsBtn">
+                <i class="fas fa-external-link-alt"></i> عرض التفاصيل الكاملة
+            </button>
+        </div>
+    </div>
+
+    <!-- النافذة المنبثقة -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <div class="close-modal" id="closeModal">
+                <i class="fas fa-times"></i>
+            </div>
+            
+            <!-- محتوى البطاقة الكاملة داخل النافذة -->
+            <div class="business-card">
+                <div class="card-header">
+                    <div class="card-icon-large">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <h1>نظام إدارة معرض السيارات</h1>
+                    <p>حل متكامل لإدارة معارض السيارات باحترافية وسهولة - نظام ويب متطور يعمل على جميع الأجهزة</p>
+                </div>
+                
+                <div class="card-body">
+                    <div class="features-section">
+                        <h2><i class="fas fa-star"></i> المميزات الرئيسية</h2>
+                        <div class="feature-grid">
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <i class="fas fa-tachometer-alt"></i>
+                                </div>
+                                <div class="feature-content">
+                                    <h3>لوحة تحكم ذكية</h3>
+                                    <p>إحصائيات فورية عن حالة المعرض، نظرة سريعة على المبيعات والمخزون، عرض السيارات والمبيعات الأخيرة</p>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <i class="fas fa-car"></i>
+                                </div>
+                                <div class="feature-content">
+                                    <h3>إدارة السيارات المتكاملة</h3>
+                                    <p>إضافة وتعديل وحذف السيارات، تصنيف حسب النوع والحالة، فلترة متقدمة للبحث، عرض تفاصيل كاملة لكل سيارة</p>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="feature-content">
+                                    <h3>إدارة المبيعات</h3>
+                                    <p>تسجيل عمليات البيع بسهولة، تتبع العملاء وطرق الدفع، سجل كامل لجميع المعاملات، إدارة العمولات والمصاريف</p>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <div class="feature-content">
+                                    <h3>تقارير وتحليلات</h3>
+                                    <p>تقارير مبيعات مفصلة، تحليل أداء المعرض، تقارير مالية ورسوم بيانية، إمكانية التصدير والطباعة</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="screenshots-section">
+                        <h2><i class="fas fa-images"></i> معاينة النظام</h2>
+                        <div class="screenshots-grid">
+                            <div class="screenshot-item">
+                                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80" alt="لوحة تحكم النظام">
+                                <div class="screenshot-label">لوحة التحكم الرئيسية</div>
+                            </div>
+                            
+                            <div class="screenshot-item">
+                                <img src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80" alt="إدارة السيارات">
+                                <div class="screenshot-label">صفحة إدارة السيارات</div>
+                            </div>
+                            
+                            <div class="screenshot-item">
+                                <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80" alt="إدارة المبيعات">
+                                <div class="screenshot-label">صفحة إدارة المبيعات</div>
+                            </div>
+                            
+                            <div class="screenshot-item">
+                                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80" alt="التقارير والتحليلات">
+                                <div class="screenshot-label">صفحة التقارير والتحليلات</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-footer">
+                    <div class="cta-section">
+                        <h3>جاهز لتحويل إدارة معرضك إلى التجربة الرقمية؟</h3>
+                        <p>اطلب النظام الآن واحصل على إدارة متكاملة لمعرضك مع دعم فني مستمر</p>
+                    </div>
+                    
+                    <div class="cta-buttons">
+                        <a href="#contact" class="btn btn-primary">
+                            <i class="fas fa-shopping-cart"></i> طلب النظام
+                        </a>
+                        <a href="#demo" class="btn btn-secondary">
+                            <i class="fas fa-play-circle"></i> مشاهدة تجريبية
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mainCard = document.getElementById('mainCard');
+            const showDetailsBtn = document.getElementById('showDetailsBtn');
+            const modalOverlay = document.getElementById('modalOverlay');
+            const closeModal = document.getElementById('closeModal');
+            
+            // فتح النافذة عند النقر على البطاقة أو الزر
+            mainCard.addEventListener('click', function(e) {
+                if (!e.target.closest('.show-details-btn')) return;
+                modalOverlay.style.display = 'flex';
+                document.body.style.overflow = 'hidden'; // منع التمرير في الخلفية
+            });
+            
+            // إغلاق النافذة عند النقر على زر الإغلاق
+            closeModal.addEventListener('click', function() {
+                modalOverlay.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+            
+            // إغلاق النافذة عند النقر خارج المحتوى
+            modalOverlay.addEventListener('click', function(e) {
+                if (e.target === modalOverlay) {
+                    modalOverlay.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+            
+            // إغلاق النافذة باستخدام مفتاح Esc
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modalOverlay.style.display === 'flex') {
+                    modalOverlay.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+            
+            // تفعيل تأثيرات التمرير داخل النافذة
+            const featureItems = document.querySelectorAll('.feature-item');
+            featureItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateX(5px)';
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateX(0)';
+                });
+            });
+            
+            // تفعيل أزرار الاتصال (للتوضيح فقط)
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation(); // منع إغلاق النافذة
+                    if (this.classList.contains('btn-primary')) {
+                        alert('شكراً لاهتمامك! سيتم التواصل معك قريباً لتفاصيل الطلب.');
+                    } else if (this.classList.contains('btn-secondary')) {
+                        alert('سيتم توجيهك إلى النسخة التجريبية من النظام.');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

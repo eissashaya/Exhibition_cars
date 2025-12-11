@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة السيارات - نظام إدارة معرض السيارات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <!-- رأس الصفحة -->
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-car"></i>
+                <div class="logo-text">
+                    <h1>إدارة السيارات</h1>
+                    <p>إضافة وتعديل وحذف السيارات في المخزون</p>
+                </div>
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-tachometer-alt"></i> الرئيسية</a></li>
+                    <li><a href="cars.html" class="active"><i class="fas fa-car"></i> السيارات</a></li>
+                    <li><a href="sales.html"><i class="fas fa-chart-line"></i> المبيعات</a></li>
+                    <li><a href="reports.html"><i class="fas fa-file-alt"></i> التقارير</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <div class="container">
+        <!-- إحصائيات سريعة -->
+        <div class="stats-grid" style="margin-top: 1rem;">
+            <div class="stat-card">
+                <i class="fas fa-car"></i>
+                <h3>إجمالي السيارات</h3>
+                <div class="stat-value" id="carsTotal">0</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-check-circle"></i>
+                <h3>متاحة للبيع</h3>
+                <div class="stat-value" id="carsAvailable">0</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-dollar-sign"></i>
+                <h3>قيمة المخزون</h3>
+                <div class="stat-value" id="inventoryValue">0 ر.س</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-cog"></i>
+                <h3>قيد الصيانة</h3>
+                <div class="stat-value" id="carsMaintenance">0</div>
+            </div>
+        </div>
+
+        <!-- إضافة سيارة جديدة -->
+        <section class="section">
+            <h2><i class="fas fa-plus-circle"></i> إضافة سيارة جديدة</h2>
+            <form id="carForm" class="form-grid">
+                <div class="form-group">
+                    <label for="carModel"><i class="fas fa-car-side"></i> الموديل</label>
+                    <div class="input-with-icon">
+                        <input type="text" id="carModel" placeholder="أدخل موديل السيارة" required>
+                        <i class="fas fa-car"></i>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="carType"><i class="fas fa-list"></i> النوع</label>
+                    <select id="carType" required>
+                        <option value="سيدان">سيدان</option>
+                        <option value="SUV">SUV</option>
+                        <option value="كوبيه">كوبيه</option>
+                        <option value="تجاري">تجاري</option>
+                        <option value="رياضية">رياضية</option>
+                        <option value="عائلية">عائلية</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="carBrand"><i class="fas fa-tag"></i> الماركة</label>
+                    <div class="input-with-icon">
+                        <input type="text" id="carBrand" placeholder="أدخل ماركة السيارة" required>
+                        <i class="fas fa-tag"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="carYear"><i class="fas fa-calendar-alt"></i> سنة الصنع</label>
+                    <input type="number" id="carYear" min="2000" max="2024" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="carPrice"><i class="fas fa-money-bill-wave"></i> السعر (ر.س)</label>
+                    <div class="input-with-icon">
+                        <input type="number" id="carPrice" step="1000" placeholder="أدخل سعر السيارة" required>
+                        <i class="fas fa-money-bill"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="carMileage"><i class="fas fa-tachometer-alt"></i> المسافة المقطوعة</label>
+                    <div class="input-with-icon">
+                        <input type="number" id="carMileage" placeholder="أدخل المسافة المقطوعة" required>
+                        <i class="fas fa-road"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="carColor"><i class="fas fa-palette"></i> اللون</label>
+                    <input type="text" id="carColor" placeholder="أدخل لون السيارة" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="carStatus"><i class="fas fa-info-circle"></i> الحالة</label>
+                    <select id="carStatus" required>
+                        <option value="متاحة">متاحة</option>
+                        <option value="مباعة">مباعة</option>
+                        <option value="قيد الصيانة">قيد الصيانة</option>
+                        <option value="مؤجلة">مؤجلة</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="carDescription"><i class="fas fa-file-alt"></i> وصف إضافي</label>
+                    <textarea id="carDescription" rows="3" placeholder="وصف إضافي عن السيارة"></textarea>
+                </div>
+
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <button type="submit" class="btn btn-secondary">
+                        <i class="fas fa-save"></i> حفظ السيارة
+                    </button>
+                    <button type="button" class="btn" onclick="clearCarForm()">
+                        <i class="fas fa-eraser"></i> مسح النموذج
+                    </button>
+                </div>
+                
+                <div id="carMessage" class="alert"></div>
+            </form>
+        </section>
+
+        <!-- فلترة السيارات -->
+        <section class="section">
+            <h2><i class="fas fa-filter"></i> فلترة السيارات</h2>
+            <div class="filters">
+                <div class="search-box">
+                    <input type="text" id="carSearch" placeholder="ابحث عن سيارة بالموديل أو اللون أو النوع...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <select id="statusFilter" onchange="filterCars()">
+                    <option value="الكل">جميع الحالات</option>
+                    <option value="متاحة">متاحة</option>
+                    <option value="مباعة">مباعة</option>
+                    <option value="قيد الصيانة">قيد الصيانة</option>
+                </select>
+                <select id="typeFilter" onchange="filterCars()">
+                    <option value="الكل">جميع الأنواع</option>
+                    <option value="سيدان">سيدان</option>
+                    <option value="SUV">SUV</option>
+                    <option value="كوبيه">كوبيه</option>
+                    <option value="تجاري">تجاري</option>
+                </select>
+                <button class="btn" onclick="resetFilters()">
+                    <i class="fas fa-redo"></i> إعادة تعيين
+                </button>
+            </div>
+        </section>
+
+        <!-- قائمة السيارات -->
+        <section class="section">
+            <h2><i class="fas fa-list"></i> قائمة السيارات</h2>
+            <div class="table-responsive">
+                <table id="carsTable">
+                    <thead>
+                        <tr>
+                            <th>الموديل</th>
+                            <th>النوع</th>
+                            <th>السنة</th>
+                            <th>السعر</th>
+                            <th>الحالة</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- البيانات تظهر هنا -->
+                    </tbody>
+                </table>
+            </div>
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <button class="btn" onclick="exportCars()">
+                    <i class="fas fa-download"></i> تصدير البيانات
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <!-- تذييل الصفحة -->
+    <footer>
+        <p>© 2025 نظام إدارة معرض السيارات | تم التطوير بواسطة  المبرمج م/عيسى شايع</p>
+        <p>جميع الحقوق محفوظة | نسخة 2.0</p>
+    </footer>
+
+    <script src="main.js"></script>
+    <script src="cars.js"></script>
+</body>
+</html>
